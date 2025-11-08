@@ -78,7 +78,7 @@ services:
   react-frontend:
     build:
       context: ./react-frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: pii_react_frontend
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
