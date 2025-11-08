@@ -15,7 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,7 +42,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/up || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:3000/up || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -66,11 +66,35 @@ services:
       - ./java-service:/app
       - maven_cache:/root/.m2
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
+    networks:
+      - pii_network
+
+  # React Frontend
+  react-frontend:
+    build:
+      context: ./react-frontend
+      dockerfile: Dockerfile.dev
+    container_name: pii_react_frontend
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./react-frontend:/app
+      - /app/node_modules
+    depends_on:
+      - rails-api
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:5173 || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - pii_network
 
