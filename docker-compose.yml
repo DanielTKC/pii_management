@@ -1,0 +1,59 @@
+name: pii-management-system
+
+services:
+  # PostgreSQL Database with pgcrypto extension
+  db:
+    image: postgres:17-alpine
+    container_name: pii_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pii_network
+
+  # Rails API Service
+  rails-api:
+    build:
+      context: ./rails-api
+      dockerfile: Dockerfile.dev
+    container_name: pii_rails_api
+    command: bash -c "bundle install && rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      RAILS_ENV: ${RAILS_ENV}
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./rails-api:/app
+      - rails_bundle:/usr/local/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/up || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - pii_network
+
+networks:
+  pii_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  rails_bundle:
