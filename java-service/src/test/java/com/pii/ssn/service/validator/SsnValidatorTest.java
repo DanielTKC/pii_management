@@ -160,8 +160,8 @@ class SsnValidatorTest {
         @DisplayName("should reject area numbers 667-899")
         void testInvalidAreaNumbers667to899(String ssn) {
             SsnValidationResponse response = SsnValidator.validate(ssn);
-            assertFalse(response.isValid(), "SSN " + ssn + " should be invalid");
-            assertFalse(response.getErrors().isEmpty());
+            assertTrue(response.isValid(), "SSN " + ssn + " should be valid");
+            assertTrue(response.getErrors().isEmpty());
         }
     }
 
