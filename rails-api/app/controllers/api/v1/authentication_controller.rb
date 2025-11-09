@@ -1,10 +1,12 @@
 class Api::V1::AuthenticationController < ApplicationController
+  allow_unauthenticated_access only: [:signup, :login]
+
   # POST /api/v1/signup
   def signup
     user = User.new(signup_params)
 
     if user.save
-      token = JsonWebToken.encode(user_id: user.id)
+      token = encode(user_id: user.id)
       render json: {
         token: token,
         user: user_response(user)
@@ -19,7 +21,7 @@ class Api::V1::AuthenticationController < ApplicationController
     user = User.find_by(email: params[:email]&.downcase)
 
     if user&.authenticate(params[:password])
-      token = JsonWebToken.encode(user_id: user.id)
+      token = encode(user_id: user.id)
       render json: {
         token: token,
         user: user_response(user)
