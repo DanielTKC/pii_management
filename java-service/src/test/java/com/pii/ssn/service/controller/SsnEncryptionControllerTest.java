@@ -3,6 +3,7 @@ package com.pii.ssn.service.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pii.ssn.service.dto.SsnDecryptionRequest;
 import com.pii.ssn.service.dto.SsnEncryptionRequest;
+import com.pii.ssn.service.dto.SsnProcessRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -438,6 +439,79 @@ class SsnEncryptionControllerTest {
                     .andExpect(jsonPath("$.ssn").exists())
                     .andExpect(jsonPath("$.ssn").isString());
             }
+        }
+    }
+    @Nested
+    @DisplayName("POST /api/ssn/process")
+    class ProcessEndpoint {
+
+        @Test
+        @DisplayName("should validate and encrypt valid SSN")
+        void testProcessValidSsn() throws Exception {
+            SsnProcessRequest request = new SsnProcessRequest("234-56-7890");
+
+            mockMvc.perform(post("/api/ssn/process")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valid").value(true))
+                .andExpect(jsonPath("$.errors").isEmpty())
+                .andExpect(jsonPath("$.encryptedSsn").exists())
+                .andExpect(jsonPath("$.encryptedSsn").isNotEmpty())
+                .andExpect(jsonPath("$.lastFour").value("7890"));
+        }
+
+        @Test
+        @DisplayName("should validate and reject invalid SSN without encrypting")
+        void testProcessInvalidSsn() throws Exception {
+            SsnProcessRequest request = new SsnProcessRequest("000-00-0000");
+
+            mockMvc.perform(post("/api/ssn/process")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.errors").isNotEmpty())
+                .andExpect(jsonPath("$.encryptedSsn").doesNotExist())
+                .andExpect(jsonPath("$.lastFour").doesNotExist());
+        }
+
+        @Test
+        @DisplayName("should reject SSN with invalid format")
+        void testProcessInvalidFormat() throws Exception {
+            SsnProcessRequest request = new SsnProcessRequest("123456789");
+
+            mockMvc.perform(post("/api/ssn/process")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.errors").isNotEmpty());
+        }
+
+        @Test
+        @DisplayName("should reject known invalid SSN")
+        void testProcessKnownInvalidSsn() throws Exception {
+            SsnProcessRequest request = new SsnProcessRequest("123-45-6789");
+
+            mockMvc.perform(post("/api/ssn/process")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.errors").isNotEmpty());
+        }
+
+        @Test
+        @DisplayName("should return 400 Bad Request for null SSN")
+        void testProcessNullSsn() throws Exception {
+            SsnProcessRequest request = new SsnProcessRequest(null);
+
+            mockMvc.perform(post("/api/ssn/process")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").exists());
         }
     }
 }
