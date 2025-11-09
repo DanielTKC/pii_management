@@ -17,6 +17,7 @@ public class SsnValidator {
         INVALID_SSNS.add("078-05-1120");
         INVALID_SSNS.add("219-09-9999");
         INVALID_SSNS.add("457-55-5462");
+        INVALID_SSNS.add("123-45-6789");
     }
 
     /**

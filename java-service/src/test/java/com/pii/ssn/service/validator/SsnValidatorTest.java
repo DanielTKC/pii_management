@@ -18,7 +18,7 @@ class SsnValidatorTest {
 
         @ParameterizedTest
         @ValueSource(strings = {
-            "123-45-6789",
+            "234-45-6789",
             "001-01-0001",
             "665-99-9999",
             "900-01-0001",
@@ -34,7 +34,7 @@ class SsnValidatorTest {
         @Test
         @DisplayName("should accept area numbers 001-665")
         void testValidAreaNumbers001to665() {
-            SsnValidationResponse response = SsnValidator.validate("123-45-6789");
+            SsnValidationResponse response = SsnValidator.validate("234-45-6789");
             assertTrue(response.isValid());
             assertTrue(response.getErrors().isEmpty());
         }
@@ -50,20 +50,20 @@ class SsnValidatorTest {
         @Test
         @DisplayName("should accept group numbers 01-99")
         void testValidGroupNumbers() {
-            SsnValidationResponse response = SsnValidator.validate("123-01-6789");
+            SsnValidationResponse response = SsnValidator.validate("234-01-6789");
             assertTrue(response.isValid());
 
-            response = SsnValidator.validate("123-99-6789");
+            response = SsnValidator.validate("234-99-6789");
             assertTrue(response.isValid());
         }
 
         @Test
         @DisplayName("should accept serial numbers 0001-9999")
         void testValidSerialNumbers() {
-            SsnValidationResponse response = SsnValidator.validate("123-45-0001");
+            SsnValidationResponse response = SsnValidator.validate("234-45-0001");
             assertTrue(response.isValid());
 
-            response = SsnValidator.validate("123-45-9999");
+            response = SsnValidator.validate("234-45-9999");
             assertTrue(response.isValid());
         }
     }
@@ -74,20 +74,20 @@ class SsnValidatorTest {
 
         @ParameterizedTest
         @ValueSource(strings = {
-            "12345678",           // Missing dashes
-            "123456789",          // Missing dashes, 9 digits
-            "12-345-6789",        // Wrong dash positions
-            "123-456-789",        // Wrong dash positions
-            "1234-56-789",        // Wrong dash positions
-            "123-45-678",         // Too short
-            "123-45-67890",       // Too long
+            "23445678",           // Missing dashes
+            "23456789",          // Missing dashes, 9 digits
+            "23-456-789",        // Wrong dash positions
+            "234-567-89",        // Wrong dash positions
+            "2345-67-89",        // Wrong dash positions
+            "234-56-789",         // Too short
+            "234-56-78900",       // Too long
             "abc-de-fghi",        // Letters instead of numbers
-            "123-4a-6789",        // Letter in group number
-            "12a-45-6789",        // Letter in area number
-            "123-45-678a",        // Letter in serial number
-            "123 45 6789",        // Spaces instead of dashes
-            "123.45.6789",        // Dots instead of dashes
-            "123/45/6789"         // Slashes instead of dashes
+            "234-4a-6789",        // Letter in group number
+            "23a-45-6789",        // Letter in area number
+            "234-45-678a",        // Letter in serial number
+            "234 45 6789",        // Spaces instead of dashes
+            "234.45.6789",        // Dots instead of dashes
+            "234/45/6789"         // Slashes instead of dashes
         })
         @DisplayName("should reject SSNs with invalid format")
         void testInvalidFormats(String ssn) {
@@ -157,7 +157,7 @@ class SsnValidatorTest {
             "667-12-3456",  // Just above 666
             "899-12-3456"   // Just below 900
         })
-        @DisplayName("should reject area numbers 667-899")
+        @DisplayName("should accept area numbers 667-899")
         void testInvalidAreaNumbers667to899(String ssn) {
             SsnValidationResponse response = SsnValidator.validate(ssn);
             assertTrue(response.isValid(), "SSN " + ssn + " should be valid");
@@ -217,7 +217,8 @@ class SsnValidatorTest {
         @ParameterizedTest
         @ValueSource(strings = {
             "219-09-9999",  // Woolworth's wallet promotional SSN
-            "457-55-5462"   // Another known invalid SSN
+            "457-55-5462",   // Another known invalid SSN
+            "123-45-6789"
         })
         @DisplayName("should reject other known invalid SSNs")
         void testOtherKnownInvalidSsns(String ssn) {
@@ -234,7 +235,7 @@ class SsnValidatorTest {
         @Test
         @DisplayName("should handle SSN with leading/trailing whitespace")
         void testSsnWithWhitespace() {
-            SsnValidationResponse response = SsnValidator.validate("  123-45-6789  ");
+            SsnValidationResponse response = SsnValidator.validate("  234-45-6789  ");
             // Should either trim and validate, or reject with format error
             assertNotNull(response);
         }
