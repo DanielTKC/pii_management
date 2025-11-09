@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,16 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class SsnEncryptionServiceTest {
 
     private SsnEncryptionService encryptionService;
-    private SecretKey testKey;
 
     @BeforeEach
     void setUp() {
-        // Generate a valid AES-256 key (32 bytes)
-        byte[] keyBytes = new byte[32];
-        for (int i = 0; i < 32; i++) {
-            keyBytes[i] = (byte) i;
-        }
-        testKey = new SecretKeySpec(keyBytes, "AES");
+        // Generate a test key dynamically for each test run (never hardcode keys in source)
+        byte[] testKeyBytes = new byte[32]; // 32 bytes for AES-256
+        new java.security.SecureRandom().nextBytes(testKeyBytes);
+        String testKey = java.util.Base64.getEncoder().encodeToString(testKeyBytes);
+
         encryptionService = new SsnEncryptionService(testKey);
     }
 
@@ -57,7 +53,7 @@ class SsnEncryptionServiceTest {
             assertNotNull(encrypted1);
             assertNotNull(encrypted2);
             assertNotEquals(encrypted1, encrypted2,
-                "Encrypting the same SSN twice should produce different ciphertext due to random IV");
+                    "Encrypting the same SSN twice should produce different ciphertext due to random IV");
         }
 
         @Test
@@ -68,7 +64,7 @@ class SsnEncryptionServiceTest {
             String encrypted = encryptionService.encrypt(ssn);
 
             assertDoesNotThrow(() -> Base64.getDecoder().decode(encrypted),
-                "Encrypted SSN should be valid Base64");
+                    "Encrypted SSN should be valid Base64");
         }
 
         @ParameterizedTest
@@ -127,7 +123,7 @@ class SsnEncryptionServiceTest {
             String decrypted = encryptionService.decrypt(encrypted);
 
             assertEquals(originalSsn, decrypted,
-                "Decrypted SSN should match original after round trip");
+                    "Decrypted SSN should match original after round trip");
         }
 
         @ParameterizedTest
@@ -280,8 +276,8 @@ class SsnEncryptionServiceTest {
             for (int i = 0; i < 32; i++) {
                 wrongKeyBytes[i] = (byte) (i + 1); // Different key
             }
-            SecretKey wrongKey = new SecretKeySpec(wrongKeyBytes, "AES");
-            SsnEncryptionService wrongKeyService = new SsnEncryptionService(wrongKey);
+            String wrongKeyBase64 = Base64.getEncoder().encodeToString(wrongKeyBytes);
+            SsnEncryptionService wrongKeyService = new SsnEncryptionService(wrongKeyBase64);
 
             // Attempt to decrypt with wrong key should fail
             assertThrows(Exception.class, () -> {
@@ -302,10 +298,10 @@ class SsnEncryptionServiceTest {
         void testInvalidKeySize() {
             // Create a key that's not 256 bits (32 bytes)
             byte[] shortKeyBytes = new byte[16]; // Only 128 bits
-            SecretKey shortKey = new SecretKeySpec(shortKeyBytes, "AES");
+            String shortKeyBase64 = Base64.getEncoder().encodeToString(shortKeyBytes);
 
             assertThrows(Exception.class, () -> {
-                new SsnEncryptionService(shortKey);
+                new SsnEncryptionService(shortKeyBase64);
             });
         }
     }
@@ -361,7 +357,7 @@ class SsnEncryptionServiceTest {
                 String encrypted = encryptionService.encrypt(ssn);
                 String decrypted = encryptionService.decrypt(encrypted);
                 assertEquals(ssn, decrypted,
-                    "Data integrity should be maintained for SSN: " + ssn);
+                        "Data integrity should be maintained for SSN: " + ssn);
             }
         }
     }
