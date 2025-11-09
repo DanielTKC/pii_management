@@ -251,11 +251,13 @@ class SsnEncryptionServiceTest {
         }
 
         @Test
-        @DisplayName("should throw exception for SSN without dashes")
+        @DisplayName("should extract last four from SSN without dashes")
         void testExtractLastFourNoDashes() {
-            assertThrows(Exception.class, () -> {
-                encryptionService.extractLastFour("234567890");
-            });
+            String ssn = "234567890";
+
+            String lastFour = encryptionService.extractLastFour(ssn);
+
+            assertEquals("7890", lastFour);
         }
     }
 
