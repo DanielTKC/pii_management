@@ -14,6 +14,15 @@ Rails.application.configure do
 
   # Enable server timing.
   config.server_timing = true
+  # Enable DNS rebinding protection with allowed hosts
+  # Allow Docker service names for tests
+  config.hosts << "rails-api"
+  config.hosts << "localhost"
+  config.hosts << "www.example.com"    # Default test domain
+  config.hosts << "example.com"        # Default test domain
+  config.hosts << IPAddr.new("127.0.0.1")    # Loopback
+  config.hosts << IPAddr.new("10.0.0.0/8")   # Docker internal network
+  config.hosts << IPAddr.new("172.16.0.0/12") # Docker bridge network
 
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
   # Run rails dev:cache to toggle Action Controller caching.

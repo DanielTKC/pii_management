@@ -21,6 +21,15 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
   config.cache_store = :null_store
+  # Enable DNS rebinding protection with allowed hosts
+  # Allow Docker service names for tests
+  config.hosts << "rails-api"
+  config.hosts << "localhost"
+  config.hosts << "www.example.com"    # Default test domain
+  config.hosts << "example.com"        # Default test domain
+  config.hosts << IPAddr.new("127.0.0.1")    # Loopback
+  config.hosts << IPAddr.new("10.0.0.0/8")   # Docker internal network
+  config.hosts << IPAddr.new("172.16.0.0/12") # Docker bridge network
 
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
