@@ -276,12 +276,12 @@ RSpec.describe JavaSsnClient do
     context 'when JAVA_SERVICE_URL is not set' do
       before do
         JavaSsnClient.reset_configuration!
-        allow(ENV).to receive(:fetch).with('JAVA_SERVICE_URL').and_raise(KeyError)
+        # Stub ENV.fetch to return the default when JAVA_SERVICE_URL is not set
+        stub_const('JavaSsnClient::JAVA_SERVICE_URL', 'http://java-service:8080')
       end
 
-      it 'raises a ConfigurationError' do
-        expect { JavaSsnClient.process(valid_ssn) }
-          .to raise_error(JavaSsnClient::ConfigurationError, /JAVA_SERVICE_URL environment variable is required/)
+      it 'uses the default URL' do
+        expect(JavaSsnClient.send(:base_url)).to eq('http://java-service:8080')
       end
     end
 

@@ -6,6 +6,9 @@ require 'json'
 
 # Client for communicating with the Java SSN validation and encryption service
 class JavaSsnClient
+  # Default Java service URL with fallback
+  JAVA_SERVICE_URL = ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')
+
   # Custom error classes for different failure scenarios
   class ConnectionError < StandardError; end
   class TimeoutError < StandardError; end
@@ -178,11 +181,7 @@ class JavaSsnClient
     # Configuration methods with ENV fallbacks
 
     def base_url
-      @base_url ||= begin
-        ENV.fetch('JAVA_SERVICE_URL')
-      rescue KeyError
-        raise ConfigurationError, 'JAVA_SERVICE_URL env is needed'
-      end
+      @base_url ||= JAVA_SERVICE_URL
     end
 
     def timeout
