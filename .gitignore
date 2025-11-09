@@ -149,7 +149,6 @@ rails-api/vendor/bundle/
 rails-api/public/uploads/
 rails-api/*.rbc
 rails-api/capybara-*.html
-rails-api/.rspec
 rails-api/db/*.sqlite3-[0-9]*
 rails-api/db/*.sqlite3
 rails-api/db/*.sqlite3-journal
