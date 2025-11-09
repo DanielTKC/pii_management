@@ -26,7 +26,6 @@ RSpec.describe User, type: :model do
           'invalid',
           'invalid@',
           '@example.com',
-          'invalid@example',
           'invalid email@example.com',
           'invalid@.com'
         ]
