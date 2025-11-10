@@ -218,7 +218,35 @@ SSN validation checks for:
   - `audit_logs` - Access tracking (planned)
 - Soft deletes via `deleted_at` timestamp
 
+## Testing Fresh Installation
+
+To simulate a fresh installation (like a hiring manager would experience):
+
+```bash
+# Run the automated clean test script
+./scripts/clean-test.sh
+```
+
+This script will:
+1. Stop and remove all containers/volumes
+2. Remove Docker images
+3. Verify .env exists (creates from .env.example if needed)
+4. Rebuild everything from scratch
+5. Start all services
+6. Check health status
+
+**Expected result:** All services healthy and accessible at their ports.
+
 ## Troubleshooting
+
+### Database init.sql error
+**Error:** `docker-entrypoint-initdb.d/init.sql: is a directory`
+
+**Fix:** This has been resolved in docker-compose.yml. If you still see it:
+```bash
+ls -la db/
+# Should show db/init-db.sql (not init.sql)
+```
 
 ### Services won't start
 ```bash
@@ -228,8 +256,8 @@ docker compose logs [service-name]
 # Restart a specific service
 docker compose restart [service-name]
 
-# Rebuild and start
-docker compose up --build
+# Complete clean rebuild
+./scripts/clean-test.sh
 ```
 
 ### Database issues

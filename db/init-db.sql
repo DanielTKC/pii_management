@@ -1,0 +1,2 @@
+-- PostgreSQL initialization script
+-- Note: No extensions needed for this application
