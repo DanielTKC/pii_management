@@ -18,6 +18,22 @@ RSpec.describe PiiRecord, type: :model do
     }
   end
 
+  #stub Java service for tests
+  before do
+    stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
+    .with(body: hash_including({ ssn: valid_ssn}))
+    .to_return(
+      status: 200,
+      body: {
+        valid: true,
+        errors: [],
+        encryptedSsn: 'encrypted_ssn_value',
+        lastFour: '7890'
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+  end
+
   describe 'associations' do
     it { should belong_to(:user) }
   end
