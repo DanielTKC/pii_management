@@ -18,17 +18,42 @@ RSpec.describe PiiRecord, type: :model do
     }
   end
 
-  #stub Java service for tests
+  #stub Java service for tests (actual valid ssn)
   before do
     stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
-    .with(body: hash_including({ ssn: valid_ssn}))
+    .with(body: { ssn: '234-56-7890' }.to_json)
     .to_return(
       status: 200,
       body: {
         valid: true,
         errors: [],
-        encryptedSsn: 'encrypted_ssn_value',
         lastFour: '7890'
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+    stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
+    .with(body: { ssn: '123-45-6780' }.to_json)
+    .to_return(
+      status: 200,
+      body: {
+        valid: true,
+        errors: [],
+        encryptedSsn: 'encrypted_ssn_value2',
+        lastFour: '6780'
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+
+    stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
+    .with(body: { ssn: '123-45-6781' }.to_json)
+    .to_return(
+      status: 200,
+      body: {
+        valid: true,
+        errors: [],
+        encryptedSsn: 'encrypted_ssn_value3',
+        lastFour: '6781'
       }.to_json,
       headers: { 'Content-Type' => 'application/json' }
     )
@@ -37,6 +62,8 @@ RSpec.describe PiiRecord, type: :model do
   describe 'associations' do
     it { should belong_to(:user) }
   end
+
+
 
   describe 'validations' do
     context 'first_name' do
