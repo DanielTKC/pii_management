@@ -30,15 +30,14 @@ cd pii_management
 ```bash
 # Copy the example environment file
 cp .env.example .env
-
-# ⚠️  NOTE FOR CODE REVIEWERS:
-# The .env.example file contains ACTUAL WORKING VALUES for demo purposes.
-# These are NOT real production secrets - this is a code challenge demonstration.
-# Simply copy .env.example to .env and you're ready to go!
-
-# No need to generate new secrets - the demo values will work immediately
-# (In production, you would generate new secrets and use a secrets manager)
 ```
+NOTE FOR CODE REVIEWERS:
+The .env.example file contains ACTUAL WORKING VALUES for demo purposes.
+These are NOT real production secrets.
+Simply copy .env.example to .env and you're ready to go!
+
+No need to generate new secrets - the demo values will work immediately
+(In production, you would generate new secrets and use a secrets manager)
 
 ### 3. Start All Services
 ```bash
