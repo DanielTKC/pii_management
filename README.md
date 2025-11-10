@@ -44,14 +44,14 @@ cp .env.example .env
 ```bash
 # Start all services with Docker Compose
 docker compose up
-
-# Or run in detached mode
-docker compose up -d
 ```
+
+## 4. Access the Application
+- **React Frontend**: http://localhost:5173
 
 **First-time setup**: The first run will take several minutes as Docker builds the images and installs dependencies.
 
-### 4. Database Setup
+### 5. Database Setup
 The database will be automatically created and migrated on first run. If you need to manually run migrations:
 
 ```bash
@@ -59,8 +59,7 @@ docker compose exec rails-api bundle exec rails db:create
 docker compose exec rails-api bundle exec rails db:migrate
 ```
 
-### 5. Access the Application
-- **React Frontend**: http://localhost:5173
+
 
 
 ## On Use of AI
