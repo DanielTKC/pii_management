@@ -3,8 +3,7 @@
 module Api
   module V1
     class PiiRecordsController < ApplicationController
-      #  Auth off for now - to be integrated later
-      # skip_before_action :authenticate, raise: false
+      skip_before_action :authenticate, raise: false
       before_action :set_pii_record, only: [:show, :update, :destroy]
 
       # GET /api/v1/pii_records
@@ -25,7 +24,7 @@ module Api
         if @pii_record.save
           render json: pii_record_json(@pii_record), status: :created
         else
-          render json: { errors: @pii_record.errors }, status: :unprocessable_entity
+          render json: { errors: @pii_record.errors }, status: :unprocessable_content
         end
       end
 
@@ -34,7 +33,7 @@ module Api
         if @pii_record.update(pii_record_update_params)
           render json: pii_record_json(@pii_record)
         else
-          render json: { errors: @pii_record.errors }, status: :unprocessable_entity
+          render json: { errors: @pii_record.errors }, status: :unprocessable_content
         end
       end
 

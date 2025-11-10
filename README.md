@@ -98,9 +98,8 @@ docker compose exec rails-api bundle exec rspec
 # Specific test file
 docker compose exec rails-api bundle exec rspec spec/models/pii_record_spec.rb
 
-# With coverage report
-docker compose exec rails-api bundle exec rspec
-# View coverage at rails-api/coverage/index.html
+# If tests fail due to database pollution, clean the test database:
+docker compose exec rails-api bash -c "RAILS_ENV=test bundle exec rails db:drop db:create db:migrate"
 ```
 
 

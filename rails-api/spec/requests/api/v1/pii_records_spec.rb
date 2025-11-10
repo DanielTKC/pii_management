@@ -172,13 +172,13 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
           post '/api/v1/pii_records', params: { pii_record: invalid_attributes }
         }.not_to change(PiiRecord, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it 'returns error messages' do
         post '/api/v1/pii_records', params: { pii_record: invalid_attributes }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         json = JSON.parse(response.body)
         expect(json['errors']).to be_present
         expect(json['errors']).to have_key('first_name')
@@ -215,13 +215,13 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
 
         pii_record.reload
         expect(pii_record.first_name).to eq('John')
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it 'returns error messages' do
         patch "/api/v1/pii_records/#{pii_record.id}", params: { pii_record: { first_name: '' } }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         json = JSON.parse(response.body)
         expect(json['errors']).to have_key('first_name')
       end
