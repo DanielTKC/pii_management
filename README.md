@@ -134,7 +134,6 @@ docker compose exec react-frontend npm test -- --run
 # Watch mode
 docker compose exec react-frontend npm test
 
-# With coverage
 docker compose exec react-frontend npm test -- --coverage
 ```
 
@@ -423,28 +422,28 @@ All services include linting and testing:
 
 This project was developed using Test-Driven Development (TDD) methodology throughout.
 
-### Technical Requirements (~12-15 hours)
-- **Rails API setup and PII CRUD** (3-4 hours): Database schema, models, controllers, service objects
-- **Java service with encryption** (4-5 hours): Spring Boot setup, AES-256-GCM implementation, validation
-- **Service integration** (2-3 hours): HTTP client, retry logic, error handling
-- **Database design and migrations** (1-2 hours): PostgreSQL setup, schema design, associations
+### Technical Requirements (~8 hours)
+- **Rails API setup and PII CRUD** (2 hours): Database schema, models, controllers, service objects
+- **Java service with encryption** (3 hours): Spring Boot setup, AES-256-GCM implementation, validation
+- **Service integration** (2 hours): HTTP client, retry logic, error handling
+- **Database design and migrations** (1 hour): PostgreSQL setup, schema design, associations
 
-### Functional Requirements (~8-10 hours)
-- **React frontend setup** (2-3 hours): Vite configuration, Tailwind CSS v4, routing
-- **Form with validation** (3-4 hours): React Hook Form integration, field validation
-- **SSN formatting and masking** (1-2 hours): Auto-formatting, display obfuscation
-- **Authentication flow** (2-3 hours): Login, signup, JWT handling, protected routes
+### Functional Requirements (~5 hours)
+- **React frontend setup** (1 hour): Vite configuration, Tailwind CSS v4, routing
+- **Form with validation** (2 hours): React Hook Form integration, field validation
+- **SSN formatting and masking** (1 hour): Auto-formatting, display obfuscation
+- **Authentication flow** (1 hour): Login, signup, JWT handling, protected routes
 
-### Testing Requirements (~6-8 hours)
-- **Rails RSpec tests** (2-3 hours): Models, requests, services (test coverage >90%)
-- **Java JUnit tests** (2-3 hours): Controllers, services (test coverage >85%)
-- **React Vitest tests** (2-3 hours): Component tests, user interactions (8 comprehensive tests)
+### Testing Requirements (~4 hours)
+- **Rails RSpec tests** (1.5 hours): Models, requests, services (test coverage >90%)
+- **Java JUnit tests** (1.5 hours): Controllers, services (test coverage >85%)
+- **React Vitest tests** (1 hour): Component tests, user interactions (8 comprehensive tests)
 
-### Infrastructure & Documentation (~4-5 hours)
-- **Docker setup** (2 hours): Multi-service orchestration, health checks
-- **Documentation** (2-3 hours): README, ARCHITECTURE, troubleshooting
+### Infrastructure & Documentation (~3 hours)
+- **Docker setup** (1.5 hours): Multi-service orchestration, health checks
+- **Documentation** (1.5 hours): README, ARCHITECTURE, troubleshooting
 
-### Total: ~30-38 hours
+### Total: ~20 hours
 
 ## Future Enhancements
 
