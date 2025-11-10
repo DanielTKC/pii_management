@@ -73,8 +73,8 @@ class PiiRecord < ApplicationRecord
     result = JavaSsnClient.process(ssn)
 
     if result['valid']
-      self.ssn_encrypted = result['encryptedSsn']
-      self.ssn_last_four = result['lastFour']
+      self.ssn_encrypted = result['encrypted_ssn']
+      self.ssn_last_four = result['last_four']
     else
       # Add each validation error from Java service
       result['errors'].each do |error|
