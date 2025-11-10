@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
 
 class ApiClient {
   constructor() {
@@ -90,10 +90,10 @@ export const piiRecordsApi = {
   delete: (id) => apiClient.delete(`/api/v1/pii_records/${id}`),
 }
 
-// Authentication API (placeholder - implement when backend is ready)
+// Authentication API
 export const authApi = {
-  login: (credentials) => apiClient.post('/api/v1/auth/login', credentials),
-  signup: (userData) => apiClient.post('/api/v1/auth/signup', userData),
+  login: (credentials) => apiClient.post('/api/v1/login', credentials),
+  signup: (userData) => apiClient.post('/api/v1/signup', userData),
   logout: () => {
     apiClient.clearAuthToken()
     return Promise.resolve()

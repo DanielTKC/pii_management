@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     try {
       // Call the login API
-      const response = await apiClient.post('/api/v1/auth/login', { email, password })
+      const response = await apiClient.post('/api/v1/login', { email, password })
 
       // Store the token
       apiClient.setAuthToken(response.token)
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
   const signup = async (email, password) => {
     try {
       // Call the signup API
-      const response = await apiClient.post('/api/v1/auth/signup', {
+      const response = await apiClient.post('/api/v1/signup', {
         email,
         password,
         password_confirmation: password
