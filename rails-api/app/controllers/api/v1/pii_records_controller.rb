@@ -4,7 +4,7 @@ module Api
   module V1
     class PiiRecordsController < ApplicationController
       #  Auth off for now - to be integrated later
-      skip_before_action :authenticate, raise: false
+      # skip_before_action :authenticate, raise: false
       before_action :set_pii_record, only: [:show, :update, :destroy]
 
       # GET /api/v1/pii_records

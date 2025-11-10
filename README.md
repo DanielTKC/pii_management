@@ -158,7 +158,109 @@ docker compose exec java-service mvn test
 # React tests
 docker compose exec react-frontend npm test -- --run
 ```
+## Complete API Flow Example
 
+  Complete API Flow Examples
+
+  1. Sign Up (Create New Account)
+
+  curl -X POST http://localhost:3000/api/v1/signup \
+    -H "Content-Type: application/json" \
+    -d '{"email":"demo@example.com","password":"password123"}'
+
+  Response (200 OK):
+  {
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE3Nj
+  I4NjY3MTIsImlhdCI6MTc2Mjc4MDMxMiwiaXNzIjoicGlpX21hbmFnZW1lbnRfY
+  XBpIiwiYXVkIjoicGlpX21hbmFnZW1lbnRfY2xpZW50In0.uYQKvgdv8m-Ip--g
+  b1xJmEpwTNKBhBnwldAVZTO6LbA",
+    "user": {
+      "id": 2,
+      "email": "demo@example.com"
+    }
+  }
+
+  2. Login (Existing Account)
+
+  curl -X POST http://localhost:3000/api/v1/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"demo@example.com","password":"password123"}'
+
+  Response: Same as signup - returns token + user object
+
+  3. Get All PII Records (WITH Token - Success)
+
+  curl http://localhost:3000/api/v1/pii_records \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIj
+  oyLCJleHAiOjE3NjI4NjY3MTIsImlhdCI6MTc2Mjc4MDMxMiwiaXNzIjoicGlpX
+  21hbmFnZW1lbnRfYXBpIiwiYXVkIjoicGlpX21hbmFnZW1lbnRfY2xpZW50In0.
+  uYQKvgdv8m-Ip--gb1xJmEpwTNKBhBnwldAVZTO6LbA"
+
+  Response (200 OK):
+  [
+    {
+      "id": 1,
+      "first_name": "Toilet",
+      "middle_name": "N/A",
+      "last_name": "Man",
+      "ssn": "***-**-4102",
+      "date_of_birth": null,
+      "email": "d@toilet.com",
+      "phone": "914-303-4434",
+      "street_address_1": "1234",
+      "street_address_2": "",
+      "city": "fake",
+      "state": "UT",
+      "zip_code": "84124",
+      "created_at": "2025-11-10T13:07:50.439Z",
+      "updated_at": "2025-11-10T13:07:50.439Z"
+    }
+  ]
+
+  Note: SSN is obfuscated as ***-**-4102 (only last 4 shown)
+
+  4. Get PII Records (WITHOUT Token - Failure)
+
+  curl http://localhost:3000/api/v1/pii_records
+
+  Response (401 Unauthorized):
+  {
+    "error": "Invalid or expired token"
+  }
+
+  5. Create New PII Record
+
+  curl -X POST http://localhost:3000/api/v1/pii_records \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+    -d '{
+      "first_name": "John",
+      "last_name": "Doe",
+      "ssn": "234-56-7890",
+      "email": "john@example.com",
+      "phone": "555-1234",
+      "street_address_1": "123 Main St",
+      "city": "Portland",
+      "state": "OR",
+      "zip_code": "97201"
+    }'
+
+  6. Get Single PII Record
+
+  curl http://localhost:3000/api/v1/pii_records/1 \
+    -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+  7. Update PII Record
+
+  curl -X PUT http://localhost:3000/api/v1/pii_records/1 \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+    -d '{"phone": "555-9999"}'
+
+  8. Delete PII Record
+
+  curl -X DELETE http://localhost:3000/api/v1/pii_records/1 \
+    -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ## Features
 
 ### Authentication & Authorization
