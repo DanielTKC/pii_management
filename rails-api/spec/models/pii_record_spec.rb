@@ -14,7 +14,6 @@ RSpec.describe PiiRecord, type: :model do
       city: 'Springfield',
       state: 'IL',
       zip_code: '62701',
-      user: user
     }
   end
 
@@ -77,7 +76,7 @@ RSpec.describe PiiRecord, type: :model do
   end
 
   describe 'associations' do
-    it { should belong_to(:user) }
+    it { should belong_to(:user).optional }
   end
 
   describe 'validations' do

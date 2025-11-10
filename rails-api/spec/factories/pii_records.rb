@@ -2,12 +2,12 @@
 
 FactoryBot.define do
   factory :pii_record do
-    association :user
+    user {nil}
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     middle_name { Faker::Name.middle_name }
     middle_name_override { false }
-    ssn { '234-56-7890' } 
+    ssn { '234-56-7890' }
     date_of_birth { Faker::Date.birthday(min_age: 18, max_age: 100) }
     email { Faker::Internet.email }
     phone { Faker::PhoneNumber.phone_number }

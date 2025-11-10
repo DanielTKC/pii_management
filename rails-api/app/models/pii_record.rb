@@ -3,7 +3,7 @@
 # Model for storing Personally Identifiable Information (PII) records
 # SSNs are encrypted by the Java microservice before being stored in the database
 class PiiRecord < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
 
   # Virtual attribute for accepting plaintext SSN (write-only)
   attr_accessor :ssn
