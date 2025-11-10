@@ -17,6 +17,9 @@ This application consists of three microservices:
 
 ## Quick Start
 
+Make sure you have docker installed and running on your computer
+https://www.docker.com/get-started/
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/DanielTKC/pii_management.git
