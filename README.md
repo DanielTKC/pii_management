@@ -19,7 +19,7 @@ This application consists of three microservices:
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/DanielTKC/pii_management.git
 cd pii_management
 ```
 
@@ -67,7 +67,7 @@ Claude code was used throughout development of this application beginning with a
 
  There was one or two times where I couldn't find the answer to an error that had me stuck (specific config hosts for tests in rails 8 is something I had yet to come across in my career), rather than waste 30 minutes trying to figure out what question to ask, I can get right back to work with the aid of an LLM.
 
- Claude wants me to type that AI is a "force-multiplier" but I'm just going to have to reign the computer in on that one. It isn't wrong, but "force-multiplier" was the name of a Dennis Rodman movie in the 90's I think. Instead, I'll just say that letting AI handle routine tasks let's me focus on delivering better product, faster. 
+ Claude wants me to type that AI is a "force-multiplier" but I'm just going to have to reign the computer in on that one. It isn't wrong, but "force-multiplier" was the name of a Dennis Rodman movie in the 90's I think. Instead, I'll just say that letting AI handle routine tasks let's me focus on delivering better product, faster.
 
 
 ## Service-Specific Setup
