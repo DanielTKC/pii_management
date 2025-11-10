@@ -26,10 +26,11 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
     }
   end
 
-  # Stub Java service for valid SSN
+  # Stub Java service for all SSNs used in tests
   before do
+    # Valid SSN: 234-56-7890
     stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
-      .with(body: { ssn: valid_ssn }.to_json)
+      .with(body: { ssn: '234-56-7890' }.to_json)
       .to_return(
         status: 200,
         body: {
@@ -41,6 +42,21 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
         headers: { 'Content-Type' => 'application/json' }
       )
 
+    # Valid SSN: 345-67-8901
+    stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
+      .with(body: { ssn: '345-67-8901' }.to_json)
+      .to_return(
+        status: 200,
+        body: {
+          valid: true,
+          errors: [],
+          encryptedSsn: 'encrypted_value_2',
+          lastFour: '8901'
+        }.to_json,
+        headers: { 'Content-Type' => 'application/json' }
+      )
+
+    # Invalid SSN: 000-00-0000
     stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
       .with(body: { ssn: '000-00-0000' }.to_json)
       .to_return(
@@ -48,7 +64,6 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
         body: {
           valid: false,
           errors: ['Area number cannot be 000.'],
-
           encryptedSsn: nil,
           lastFour: nil
         }.to_json,
@@ -61,16 +76,6 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
       PiiRecord.create!(valid_attributes)
       PiiRecord.create!(valid_attributes.merge(ssn: '345-67-8901', email: 'jane@example.com'))
 
-
-      # Stub for second SSN
-      stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
-        .with(body: { ssn: '345-67-8901' }.to_json)
-        .to_return(
-          status: 200,
-          body: { valid: true, errors: [], encryptedSsn: 'encrypted_value_2', lastFour: '8901' }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
-
       get '/api/v1/pii_records'
 
       expect(response).to have_http_status(:ok)
@@ -78,18 +83,8 @@ RSpec.describe 'Api::V1::PiiRecords', type: :request do
     end
 
     it 'does not return soft-deleted records' do
-
       active_record = PiiRecord.create!(valid_attributes)
       deleted_record = PiiRecord.create!(valid_attributes.merge(ssn: '345-67-8901'))
-      
-
-      stub_request(:post, "#{ENV.fetch('JAVA_SERVICE_URL', 'http://java-service:8080')}/api/ssn/process")
-        .with(body: { ssn: '345-67-8901' }.to_json)
-        .to_return(
-          status: 200,
-          body: { valid: true, errors: [], encryptedSsn: 'encrypted_value_2', lastFour: '8901' }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
 
       deleted_record.soft_delete
 

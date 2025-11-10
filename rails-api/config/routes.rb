@@ -14,6 +14,9 @@ Rails.application.routes.draw do
       # Authentication routes
       post 'signup', to: 'authentication#signup'
       post 'login', to: 'authentication#login'
+
+      # PII Records routes
+      resources :pii_records, only: [:index, :show, :create, :update, :destroy]
     end
   end
 end
